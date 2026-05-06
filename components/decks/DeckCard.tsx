@@ -27,10 +27,13 @@ export function DeckCard({ deck }: { deck: DeckSummary }) {
 
   return (
     <>
-      <div className="flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900 px-5 py-4 gap-4">
+      <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-900 p-5 gap-4 h-full">
         {/* Info */}
-        <div className="min-w-0 flex-1">
-          <p className="font-semibold text-base text-white truncate">{deck.name}</p>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold text-base text-white truncate mb-1">{deck.name}</p>
+          {deck.description && (
+            <p className="text-zinc-500 text-xs line-clamp-2 mb-2">{deck.description}</p>
+          )}
           <p className="text-zinc-500 text-sm">
             {deck.cardCount} carte{deck.cardCount !== 1 ? "s" : ""}
             {deck.dueCount > 0 && (
@@ -40,7 +43,7 @@ export function DeckCard({ deck }: { deck: DeckSummary }) {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 flex-wrap">
           <Link
             href={`/decks/${deck.id}/study`}
             className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-white text-zinc-950 hover:bg-zinc-100 active:scale-95 transition-all"
@@ -55,7 +58,7 @@ export function DeckCard({ deck }: { deck: DeckSummary }) {
           </Link>
           <button
             onClick={() => setDeleteOpen(true)}
-            className="p-1.5 rounded-lg border border-zinc-800 text-red-500 hover:bg-zinc-800 active:scale-95 transition-all"
+            className="p-1.5 rounded-lg border border-zinc-800 text-red-500 hover:bg-zinc-800 active:scale-95 transition-all ml-auto"
             title="Supprimer"
           >
             <Trash2 className="h-4 w-4" />

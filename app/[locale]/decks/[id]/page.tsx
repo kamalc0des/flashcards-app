@@ -35,7 +35,7 @@ export default async function DeckDetailPage({
 
   return (
     <main className="min-h-dvh bg-zinc-950 text-white">
-      <div className="max-w-xl mx-auto px-4 py-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         {/* Back */}
         <Link
           href="/dashboard"
@@ -115,7 +115,7 @@ export default async function DeckDetailPage({
             </div>
           </div>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
             {deck.cards.map((card, i) => (
               <CardListItem
                 key={card.id}

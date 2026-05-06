@@ -42,11 +42,11 @@ export default async function DashboardPage() {
   }));
 
   return (
-    <main className="min-h-dvh bg-zinc-950 text-white flex flex-col items-center px-4 py-12">
-      <div className="w-full max-w-xl">
+    <main className="min-h-dvh bg-zinc-950 text-white flex flex-col items-center px-4 sm:px-6 py-10 sm:py-14">
+      <div className="w-full max-w-7xl">
         <div className="flex items-center justify-between mb-10">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Flashcards</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Flashcards</h1>
             <p className="text-zinc-400 text-sm mt-1">{t("title")}</p>
           </div>
           <Link
@@ -74,7 +74,7 @@ export default async function DashboardPage() {
             </Link>
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {deckSummaries.map((deck) => (
               <DeckCard key={deck.id} deck={deck} />
             ))}
