@@ -38,6 +38,14 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const file = formData.get("file") as File | null;
   if (!file) return NextResponse.json({ error: "No file" }, { status: 400 });
 
+  // 50 MB max
+  if (file.size > 50 * 1024 * 1024) {
+    return NextResponse.json({ error: "File too large (max 50 MB)" }, { status: 413 });
+  }
+  if (!file.name.endsWith(".apkg")) {
+    return NextResponse.json({ error: "Invalid file type" }, { status: 400 });
+  }
+
   const buffer = Buffer.from(await file.arrayBuffer());
 
   let dbBuf: Buffer;

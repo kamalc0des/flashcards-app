@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { isValidTiptapJson } from "@/lib/security";
 
 const cardSchema = z.object({
   front: z.record(z.string(), z.unknown()),
@@ -39,6 +40,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const body = await req.json();
   const parsed = cardSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+
+  if (!isValidTiptapJson(parsed.data.front) || !isValidTiptapJson(parsed.data.back)) {
+    return NextResponse.json({ error: "Invalid card content" }, { status: 400 });
+  }
 
   const card = await prisma.card.create({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

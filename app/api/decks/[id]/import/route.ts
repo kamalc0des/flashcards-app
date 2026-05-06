@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { textToTiptap } from "@/lib/tiptap";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { sanitizeText } from "@/lib/security";
 
 const importSchema = z.object({
   rows: z.array(z.tuple([z.string(), z.string()])).max(2000),
@@ -24,8 +25,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
   const data = parsed.data.rows.map(([front, back]) => ({
     deckId: id,
-    front: textToTiptap(front),
-    back: textToTiptap(back),
+    front: textToTiptap(sanitizeText(front)),
+    back: textToTiptap(sanitizeText(back)),
   }));
 
   await prisma.card.createMany({ data });
