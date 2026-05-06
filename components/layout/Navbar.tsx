@@ -3,8 +3,6 @@
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, Link } from "@/i18n/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,10 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BookOpen, LogOut, LayoutDashboard, Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { LogOut, LayoutDashboard } from "lucide-react";
 import { useLocale } from "next-intl";
-import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const t = useTranslations("nav");
@@ -34,108 +30,60 @@ export function Navbar() {
     : "U";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
-      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2 font-semibold text-lg shrink-0">
-          <BookOpen className="h-5 w-5 text-primary" />
-          <span>Flashcards</span>
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-800 bg-zinc-950/90 backdrop-blur">
+      <div className="max-w-xl mx-auto px-4 h-13 flex items-center justify-between gap-4">
+        <Link href="/dashboard" className="text-white font-bold text-base tracking-tight">
+          Flashcards
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={switchLocale} className="font-mono text-xs">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={switchLocale}
+            className="text-zinc-500 hover:text-zinc-200 text-xs font-mono px-2 py-1 rounded-lg hover:bg-zinc-800 transition-colors"
+          >
             {locale === "en" ? "FR" : "EN"}
-          </Button>
+          </button>
 
           {session ? (
-            <>
-              <Link
-                href="/dashboard"
-                className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
-              >
-                <LayoutDashboard className="h-4 w-4 mr-1.5" />
-                {t("dashboard")}
-              </Link>
-              <DropdownMenu>
-                <DropdownMenuTrigger render={
-                  <Avatar className="h-8 w-8 cursor-pointer">
-                    <AvatarImage src={session.user?.image ?? ""} />
-                    <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-                  </Avatar>
-                } />
-                <DropdownMenuContent align="end" className="w-48">
-                  <div className="px-2 py-1.5 text-sm font-medium truncate">
-                    {session.user?.name || session.user?.email}
-                  </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push("/dashboard")}>
-                    <LayoutDashboard className="h-4 w-4 mr-2" />
-                    {t("dashboard")}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                    variant="destructive"
-                  >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    {t("signOut")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
+            <DropdownMenu>
+              <DropdownMenuTrigger render={
+                <button className="w-8 h-8 rounded-full bg-zinc-700 text-white text-xs font-semibold flex items-center justify-center hover:bg-zinc-600 transition-colors overflow-hidden">
+                  {session.user?.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={session.user.image} alt={initials} className="w-full h-full object-cover" />
+                  ) : initials}
+                </button>
+              } />
+              <DropdownMenuContent align="end" className="w-48 bg-zinc-900 border-zinc-700">
+                <div className="px-2 py-1.5 text-sm font-medium text-zinc-300 truncate">
+                  {session.user?.name || session.user?.email}
+                </div>
+                <DropdownMenuSeparator className="bg-zinc-700" />
+                <DropdownMenuItem
+                  onClick={() => router.push("/dashboard")}
+                  className="text-zinc-300 hover:text-white hover:bg-zinc-800"
+                >
+                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  {t("dashboard")}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-zinc-700" />
+                <DropdownMenuItem
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="text-red-400 hover:text-red-300 hover:bg-zinc-800"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  {t("signOut")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
-            <Link href="/auth/signin" className={cn(buttonVariants({ size: "sm" }))}>
+            <Link
+              href="/auth/signin"
+              className="px-3 py-1.5 rounded-lg bg-white text-zinc-950 font-semibold text-sm hover:bg-zinc-100 transition-colors"
+            >
               {t("signIn")}
             </Link>
           )}
-        </nav>
-
-        {/* Mobile nav */}
-        <div className="flex md:hidden items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={switchLocale} className="font-mono text-xs">
-            {locale === "en" ? "FR" : "EN"}
-          </Button>
-          <Sheet>
-            <SheetTrigger render={<Button variant="ghost" size="icon" />}>
-              <Menu className="h-5 w-5" />
-            </SheetTrigger>
-            <SheetContent side="right" className="w-64">
-              <div className="flex flex-col gap-4 pt-6">
-                {session ? (
-                  <>
-                    <div className="flex items-center gap-3 px-2">
-                      <Avatar className="h-9 w-9">
-                        <AvatarImage src={session.user?.image ?? ""} />
-                        <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-                      </Avatar>
-                      <div className="text-sm font-medium truncate">
-                        {session.user?.name || session.user?.email}
-                      </div>
-                    </div>
-                    <Link
-                      href="/dashboard"
-                      className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}
-                    >
-                      <LayoutDashboard className="h-4 w-4 mr-2" />
-                      {t("dashboard")}
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      className="justify-start text-destructive"
-                      onClick={() => signOut({ callbackUrl: "/" })}
-                    >
-                      <LogOut className="h-4 w-4 mr-2" />
-                      {t("signOut")}
-                    </Button>
-                  </>
-                ) : (
-                  <Link href="/auth/signin" className={cn(buttonVariants())}>
-                    {t("signIn")}
-                  </Link>
-                )}
-              </div>
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
     </header>

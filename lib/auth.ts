@@ -5,6 +5,8 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 
+const ALLOWED_EMAILS = ["kamalcodes.pro@gmail.com", "najat.ibrahim1997@gmail.com"];
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
@@ -23,24 +25,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email as string },
-        });
+        const email = credentials.email as string;
+        if (!ALLOWED_EMAILS.includes(email)) return null;
+        const user = await prisma.user.findUnique({ where: { email } });
         if (!user?.passwordHash) return null;
-        const valid = await bcrypt.compare(
-          credentials.password as string,
-          user.passwordHash
-        );
+        const valid = await bcrypt.compare(credentials.password as string, user.passwordHash);
         if (!valid) return null;
         return { id: user.id, email: user.email, name: user.name, image: user.image };
       },
     }),
   ],
   callbacks: {
+    async signIn({ user }) {
+      if (!user.email || !ALLOWED_EMAILS.includes(user.email)) return false;
+      return true;
+    },
     async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-      }
+      if (session.user) session.user.id = user.id;
       return session;
     },
   },

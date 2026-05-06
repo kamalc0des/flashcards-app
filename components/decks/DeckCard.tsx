@@ -1,51 +1,93 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Trash2 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
-import { BookOpen } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { DeckSummary } from "@/types";
 
 export function DeckCard({ deck }: { deck: DeckSummary }) {
-  const t = useTranslations("dashboard");
-  const dt = useTranslations("deck");
+  const router = useRouter();
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    await fetch(`/api/decks/${deck.id}`, { method: "DELETE" });
+    router.refresh();
+  };
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2.5">
-            <div
-              className="w-3 h-3 rounded-full shrink-0 mt-0.5"
-              style={{ backgroundColor: deck.color }}
-            />
-            <CardTitle className="text-base leading-snug">{deck.name}</CardTitle>
-          </div>
-          {deck.dueCount > 0 && (
-            <Badge variant="destructive" className="shrink-0 text-xs">
-              {t("due", { count: deck.dueCount })}
-            </Badge>
-          )}
+    <>
+      <div className="flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900 px-5 py-4 gap-4">
+        {/* Info */}
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold text-base text-white truncate">{deck.name}</p>
+          <p className="text-zinc-500 text-sm">
+            {deck.cardCount} carte{deck.cardCount !== 1 ? "s" : ""}
+            {deck.dueCount > 0 && (
+              <span className="ml-2 text-amber-400 font-medium">· {deck.dueCount} à réviser</span>
+            )}
+          </p>
         </div>
-        {deck.description && (
-          <p className="text-sm text-muted-foreground pl-5 line-clamp-2">{deck.description}</p>
-        )}
-      </CardHeader>
-      <CardContent className="flex items-center justify-between pt-0">
-        <span className="text-sm text-muted-foreground">
-          {t("cards", { count: deck.cardCount })}
-        </span>
-        <Link
-          href={`/decks/${deck.id}/study`}
-          className={cn(buttonVariants({ size: "sm" }))}
-        >
-          <BookOpen className="h-3.5 w-3.5 mr-1.5" />
-          {dt("study")}
-        </Link>
-      </CardContent>
-    </Card>
+
+        {/* Actions */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href={`/decks/${deck.id}/study`}
+            className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-white text-zinc-950 hover:bg-zinc-100 active:scale-95 transition-all"
+          >
+            Réviser
+          </Link>
+          <Link
+            href={`/decks/${deck.id}`}
+            className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-300 hover:bg-zinc-800 active:scale-95 transition-all"
+          >
+            Modifier
+          </Link>
+          <button
+            onClick={() => setDeleteOpen(true)}
+            className="p-1.5 rounded-lg border border-zinc-800 text-red-500 hover:bg-zinc-800 active:scale-95 transition-all"
+            title="Supprimer"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+
+      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <DialogContent className="bg-zinc-900 border-zinc-800 text-white">
+          <DialogHeader>
+            <DialogTitle>Supprimer le deck</DialogTitle>
+            <DialogDescription className="text-zinc-400">
+              Supprimer &quot;{deck.name}&quot; et toutes ses cartes ? Cette action est irréversible.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button
+              onClick={() => setDeleteOpen(false)}
+              className="px-4 py-2 rounded-xl border border-zinc-700 text-zinc-300 text-sm font-semibold hover:bg-zinc-800 transition-all"
+            >
+              Annuler
+            </button>
+            <button
+              disabled={deleting}
+              onClick={handleDelete}
+              className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-500 active:scale-95 disabled:opacity-50 transition-all"
+            >
+              Supprimer
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

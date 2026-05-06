@@ -77,6 +77,7 @@ model Card {
   deckId    String
   front     Json
   back      Json
+  suspended Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

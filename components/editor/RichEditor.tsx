@@ -23,6 +23,7 @@ interface RichEditorProps {
 
 export function RichEditor({ content, onChange, placeholder, editable = true }: RichEditorProps) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({ codeBlock: false }),
       TextStyle,
@@ -47,9 +48,9 @@ export function RichEditor({ content, onChange, placeholder, editable = true }: 
   }
 
   return (
-    <div className="border rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-ring">
+    <div className="rounded-xl border border-zinc-700 overflow-hidden focus-within:border-zinc-500 bg-zinc-800 transition-colors">
       <EditorToolbar editor={editor} />
-      <div className="p-3 min-h-[120px] prose prose-sm max-w-none dark:prose-invert">
+      <div className="p-3 min-h-[120px] prose prose-sm max-w-none prose-invert">
         <TiptapContent editor={editor} />
       </div>
     </div>

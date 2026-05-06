@@ -4,10 +4,8 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { buttonVariants } from "@/components/ui/button";
 import { DeckCard } from "@/components/decks/DeckCard";
 import { Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -44,30 +42,49 @@ export default async function DashboardPage() {
   }));
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <Link href="/decks/new" className={cn(buttonVariants())}>
-          <Plus className="h-4 w-4 mr-1.5" />
-          {t("newDeck")}
-        </Link>
-      </div>
-
-      {deckSummaries.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
-          <p className="text-muted-foreground">{t("empty")}</p>
-          <Link href="/decks/new" className={cn(buttonVariants())}>
-            <Plus className="h-4 w-4 mr-1.5" />
+    <main className="min-h-dvh bg-zinc-950 text-white flex flex-col items-center px-4 py-12">
+      <div className="w-full max-w-xl">
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Flashcards</h1>
+            <p className="text-zinc-400 text-sm mt-1">{t("title")}</p>
+          </div>
+          <Link
+            href="/decks/new"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-zinc-950 font-semibold text-sm hover:bg-zinc-100 active:scale-95 transition-all"
+          >
+            <Plus className="h-4 w-4" />
             {t("newDeck")}
           </Link>
         </div>
-      ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {deckSummaries.map((deck) => (
-            <DeckCard key={deck.id} deck={deck} />
-          ))}
-        </div>
-      )}
-    </div>
+
+        {deckSummaries.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
+            <div className="text-4xl">📚</div>
+            <div>
+              <p className="text-white font-semibold mb-1">{t("empty")}</p>
+              <p className="text-zinc-500 text-sm">Create your first deck to get started</p>
+            </div>
+            <Link
+              href="/decks/new"
+              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-zinc-950 font-semibold text-sm hover:bg-zinc-100 active:scale-95 transition-all"
+            >
+              <Plus className="h-4 w-4" />
+              {t("newDeck")}
+            </Link>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {deckSummaries.map((deck) => (
+              <DeckCard key={deck.id} deck={deck} />
+            ))}
+          </div>
+        )}
+
+        <p className="text-center text-zinc-700 text-xs mt-10">
+          {deckSummaries.reduce((acc, d) => acc + d.cardCount, 0)} cards total
+        </p>
+      </div>
+    </main>
   );
 }

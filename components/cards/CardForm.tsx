@@ -4,13 +4,10 @@ import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/navigation";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { RichEditor } from "@/components/editor/RichEditor";
 import { ChevronLeft } from "lucide-react";
 import type { JSONContent } from "@tiptap/react";
 import { emptyTiptap } from "@/lib/tiptap";
-import { cn } from "@/lib/utils";
 
 interface CardFormProps {
   deckId: string;
@@ -50,37 +47,47 @@ export function CardForm({ deckId, cardId, initialFront, initialBack, mode }: Ca
   };
 
   return (
-    <div className="max-w-3xl">
-      <Link
-        href={`/decks/${deckId}`}
-        className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "mb-6 -ml-1")}
-      >
-        <ChevronLeft className="h-4 w-4 mr-1" />
-        {t("backToDeck")}
-      </Link>
+    <main className="min-h-dvh bg-zinc-950 text-white">
+      <div className="max-w-2xl mx-auto px-4 py-10">
+        <Link
+          href={`/decks/${deckId}`}
+          className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-sm mb-8"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          {t("backToDeck")}
+        </Link>
 
-      <h1 className="text-2xl font-bold mb-8">
-        {mode === "create" ? t("createTitle") : t("editTitle")}
-      </h1>
+        <h1 className="text-2xl font-bold mb-8">
+          {mode === "create" ? t("createTitle") : t("editTitle")}
+        </h1>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <Label className="text-base font-semibold">{t("front")}</Label>
-          <RichEditor content={front} onChange={setFront} placeholder={t("frontPlaceholder")} />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label className="text-base font-semibold">{t("back")}</Label>
-          <RichEditor content={back} onChange={setBack} placeholder={t("backPlaceholder")} />
-        </div>
-        <div className="flex gap-3">
-          <Button type="submit" disabled={loading}>
-            {mode === "create" ? t("create") : t("save")}
-          </Button>
-          <Button type="button" variant="outline" onClick={() => router.back()}>
-            {t("cancel")}
-          </Button>
-        </div>
-      </form>
-    </div>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-zinc-300 uppercase tracking-wide">{t("front")}</label>
+            <RichEditor content={front} onChange={setFront} placeholder={t("frontPlaceholder")} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-zinc-300 uppercase tracking-wide">{t("back")}</label>
+            <RichEditor content={back} onChange={setBack} placeholder={t("backPlaceholder")} />
+          </div>
+          <div className="flex gap-3">
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-5 py-2.5 rounded-xl bg-white text-zinc-950 font-semibold text-sm hover:bg-zinc-100 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              {mode === "create" ? t("create") : t("save")}
+            </button>
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="px-5 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 active:scale-95 transition-all"
+            >
+              {t("cancel")}
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
   );
 }

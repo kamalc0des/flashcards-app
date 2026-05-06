@@ -1,5 +1,5 @@
 {
-  "name": "create-a-web-application-about-flashcards.-you-can",
+  "name": "flashcards-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
     "@base-ui/react": "^1.4.1",
+    "@bokuweb/zstd-wasm": "^0.0.27",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@tiptap/extension-code-block-lowlight": "^3.22.5",
@@ -23,11 +24,14 @@
     "@tiptap/pm": "^3.22.5",
     "@tiptap/react": "^3.22.5",
     "@tiptap/starter-kit": "^3.22.5",
+    "adm-zip": "^0.5.17",
     "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "dotenv": "^17.4.2",
+    "fzstd": "^0.1.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^1.14.0",
     "next": "16.2.4",
@@ -44,7 +48,9 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/adm-zip": "^0.5.8",
     "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/papaparse": "^5.5.2",
     "@types/pg": "^8.20.0",

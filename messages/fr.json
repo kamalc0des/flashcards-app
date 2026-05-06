@@ -37,7 +37,7 @@
   },
   "deck": {
     "study": "Réviser",
-    "import": "Importer CSV",
+    "import": "Importer un fichier",
     "addCard": "Ajouter une carte",
     "editDeck": "Modifier le paquet",
     "deleteDeck": "Supprimer le paquet",
@@ -51,7 +51,9 @@
     "created": "Créé le",
     "actions": "Actions",
     "editCard": "Modifier la carte",
-    "deleteCard": "Supprimer la carte"
+    "deleteCard": "Supprimer la carte",
+    "suspendCard": "Suspendre la carte",
+    "unsuspendCard": "Réactiver la carte"
   },
   "deckForm": {
     "createTitle": "Créer un paquet",

@@ -18,6 +18,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const dueCards = await prisma.card.findMany({
     where: {
       deckId: id,
+      suspended: false,
       cardReviews: { some: { userId: session.user.id, due: { lte: now } } },
     },
     include: {
@@ -30,6 +31,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const newCards = await prisma.card.findMany({
     where: {
       deckId: id,
+      suspended: false,
       cardReviews: { none: { userId: session.user.id } },
     },
     include: { cardReviews: true },

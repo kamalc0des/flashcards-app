@@ -1,5 +1,5 @@
 .tiptap p.is-editor-empty:first-child::before {
-  color: hsl(var(--muted-foreground));
+  color: #52525b;
   content: attr(data-placeholder);
   float: left;
   height: 0;
@@ -7,9 +7,10 @@
 }
 
 .tiptap pre {
-  background: hsl(220 13% 18%);
-  border-radius: 0.4rem;
-  color: hsl(220 14% 96%);
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 0.5rem;
+  color: #e4e4e7;
   font-family: var(--font-geist-mono), monospace;
   margin: 0.75rem 0;
   padding: 0.75rem 1rem;
@@ -24,11 +25,12 @@
 }
 
 .tiptap code {
-  background: hsl(var(--muted));
+  background: #27272a;
   border-radius: 0.2rem;
   font-family: var(--font-geist-mono), monospace;
   font-size: 0.85em;
   padding: 0.1em 0.3em;
+  color: #a1a1aa;
 }
 
 .tiptap mark {

@@ -30,7 +30,7 @@ export function EditorToolbar({ editor }: { editor: Editor | null }) {
   if (!editor) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-0.5 border-b px-2 py-1 bg-muted/30">
+    <div className="flex flex-wrap items-center gap-0.5 border-b border-zinc-700 px-2 py-1 bg-zinc-900/50">
       <Toggle
         size="sm"
         pressed={editor.isActive("bold")}

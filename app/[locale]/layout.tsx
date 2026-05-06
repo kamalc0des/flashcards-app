@@ -26,8 +26,7 @@ export default async function LocaleLayout({
     <NextIntlClientProvider messages={messages}>
       <SessionProvider>
         <TooltipProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
+          {children}
         </TooltipProvider>
       </SessionProvider>
     </NextIntlClientProvider>

@@ -37,7 +37,7 @@
   },
   "deck": {
     "study": "Study",
-    "import": "Import CSV",
+    "import": "Import file",
     "addCard": "Add card",
     "editDeck": "Edit deck",
     "deleteDeck": "Delete deck",
@@ -51,7 +51,9 @@
     "created": "Created",
     "actions": "Actions",
     "editCard": "Edit card",
-    "deleteCard": "Delete card"
+    "deleteCard": "Delete card",
+    "suspendCard": "Suspend card",
+    "unsuspendCard": "Unsuspend card"
   },
   "deckForm": {
     "createTitle": "Create deck",
