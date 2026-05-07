@@ -19,6 +19,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const [current, setCurrent] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [learned, setLearned] = useState(0);
 
   useEffect(() => {
     fetch(`/api/decks/${deckId}/study-queue`)
@@ -41,7 +42,20 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
         body: JSON.stringify({ cardId: card.id, quality }),
       });
       setFlipped(false);
-      setCurrent((v) => v + 1);
+      if (quality === 0) {
+        // Again — requeue at end, not counted as learned
+        setQueue((q) => {
+          const next = [...q];
+          next.splice(current, 1);
+          next.push(card);
+          return next;
+        });
+        // current index stays the same (next card shifts in)
+      } else {
+        // Hard / Good / Easy — card is learned, move forward
+        setLearned((v) => v + 1);
+        setCurrent((v) => v + 1);
+      }
     },
     [queue, current, deckId]
   );
@@ -74,19 +88,19 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
 
   if (current >= queue.length) {
     return (
-      <div className="min-h-dvh bg-zinc-950 text-white flex flex-col items-center justify-center px-6">
+      <div className="h-dvh bg-zinc-950 text-white flex flex-col items-center justify-center px-6">
         <div className="w-full max-w-sm text-center">
           <div className="text-5xl mb-5">🎉</div>
           <h2 className="text-2xl font-bold mb-2">{t("done")}</h2>
-          <p className="text-zinc-400 text-sm mb-2">
-            {queue.length} card{queue.length > 1 ? "s" : ""} reviewed
+          <p className="text-zinc-400 text-sm mb-1">
+            <span className="text-white font-semibold">{learned}</span> carte{learned > 1 ? "s" : ""} maîtrisée{learned > 1 ? "s" : ""}
           </p>
           <p className="text-zinc-500 text-sm mb-8">
             Deck: <span className="font-semibold" style={{ color: deckColor }}>{deckName}</span>
           </p>
           <div className="flex flex-col gap-3">
             <button
-              onClick={() => { setCurrent(0); setFlipped(false); setQueue((q) => [...q].sort(() => Math.random() - 0.5)); }}
+              onClick={() => { setCurrent(0); setLearned(0); setFlipped(false); setQueue((q) => [...q].sort(() => Math.random() - 0.5)); }}
               className="w-full py-3.5 rounded-2xl font-semibold text-sm text-zinc-950 transition-colors active:scale-95"
               style={{ backgroundColor: deckColor }}
             >
@@ -105,7 +119,8 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   }
 
   const card = queue[current];
-  const progress = (current / queue.length) * 100;
+  const totalUnique = learned + (queue.length - current);
+  const progress = (learned / totalUnique) * 100;
 
   return (
     <div className="h-dvh bg-zinc-950 text-white flex flex-col overflow-hidden">
@@ -123,7 +138,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
           </Link>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: deckColor }} />
-            <span className="text-sm text-zinc-400">{current + 1} / {queue.length}</span>
+            <span className="text-sm text-zinc-400">{learned} / {totalUnique}</span>
           </div>
         </div>
 
