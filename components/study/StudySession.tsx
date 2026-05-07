@@ -62,7 +62,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
       fetch(`/api/decks/${deckId}/study-queue`)
         .then((r) => r.json())
         .then((data: StudyCardType[]) => {
-          const shuffled = [...data].sort(() => Math.random() - 0.5);
+          const shuffled = [...data].sort(() => Math.random() - 0.5).slice(0, 20);
           setQueue(shuffled);
           setLoading(false);
         });
@@ -76,7 +76,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
     fetch(`/api/decks/${deckId}/study-queue`)
       .then((r) => r.json())
       .then((data: StudyCardType[]) => {
-        const shuffled = [...data].sort(() => Math.random() - 0.5);
+        const shuffled = [...data].sort(() => Math.random() - 0.5).slice(0, 20);
         setQueue(shuffled);
         setCurrent(0);
         setLearned(0);
