@@ -42,7 +42,7 @@ export default async function DeckDetailPage({
           className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-sm mb-8"
         >
           <ChevronLeft className="h-4 w-4" />
-          My decks
+          Mes paquets
         </Link>
 
         {/* Inline editable name/description */}
@@ -56,9 +56,9 @@ export default async function DeckDetailPage({
 
         {/* Stats row */}
         <p className="text-zinc-600 text-xs mb-6">
-          {deck.cards.length} cards
-          {dueCount > 0 && <span className="text-amber-400 ml-2">· {dueCount} due</span>}
-          {suspendedCount > 0 && <span className="ml-2">· {suspendedCount} suspended</span>}
+          {deck.cards.length} carte{deck.cards.length !== 1 ? "s" : ""}
+          {dueCount > 0 && <span className="text-amber-400 ml-2">· {dueCount} à réviser</span>}
+          {suspendedCount > 0 && <span className="ml-2">· {suspendedCount} suspendue{suspendedCount !== 1 ? "s" : ""}</span>}
         </p>
 
         {/* Action buttons */}
@@ -94,7 +94,7 @@ export default async function DeckDetailPage({
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 active:scale-95 transition-all"
             >
               <Download className="h-4 w-4" />
-              Exporter
+              Exporter CSV
             </a>
           )}
         </div>
@@ -105,7 +105,7 @@ export default async function DeckDetailPage({
             <div className="text-3xl">🃏</div>
             <div>
               <p className="text-white font-semibold mb-1">{t("noCards")}</p>
-              <p className="text-zinc-500 text-sm">Add your first card to start studying</p>
+              <p className="text-zinc-500 text-sm">Ajoutez votre première carte pour commencer à réviser</p>
             </div>
             <div className="flex gap-2">
               <Link

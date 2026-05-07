@@ -205,7 +205,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
               className="w-full py-3.5 rounded-2xl font-semibold text-sm text-zinc-950 transition-colors active:scale-95"
               style={{ backgroundColor: deckColor }}
             >
-              Study again
+              Recommencer
             </button>
             <Link
               href="/dashboard"

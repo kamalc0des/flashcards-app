@@ -41,7 +41,7 @@ export function StudyCard({ card, flipped, onFlip, accentColor }: StudyCardProps
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
-              Tap to reveal
+              Appuyer pour révéler
             </span>
           </div>
         </div>
@@ -58,7 +58,7 @@ export function StudyCard({ card, flipped, onFlip, accentColor }: StudyCardProps
             <RichEditor content={card.front} editable={false} />
           </div>
           <div className="flex items-center px-5 pt-3 pb-2">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Answer</span>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Réponse</span>
           </div>
           <div className="flex-1 overflow-y-auto px-5 pb-5 min-h-0">
             <RichEditor content={card.back} editable={false} />
