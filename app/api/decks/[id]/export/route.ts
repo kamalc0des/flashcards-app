@@ -1,8 +1,14 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { tiptapToPlainText } from "@/lib/tiptap";
 import { NextResponse } from "next/server";
+import { generateHTML } from "@tiptap/html";
+import StarterKit from "@tiptap/starter-kit";
+import { TextStyle } from "@tiptap/extension-text-style";
+import { Color } from "@tiptap/extension-color";
+import Highlight from "@tiptap/extension-highlight";
 import type { JSONContent } from "@tiptap/react";
+
+const EXTENSIONS = [StarterKit, TextStyle, Color, Highlight.configure({ multicolor: true })];
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -21,8 +27,8 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const escape = (s: string) => `"${s.replace(/"/g, '""')}"`;
 
   const rows = deck.cards.map((card) => {
-    const front = tiptapToPlainText(card.front as JSONContent);
-    const back = tiptapToPlainText(card.back as JSONContent);
+    const front = generateHTML(card.front as JSONContent, EXTENSIONS);
+    const back = generateHTML(card.back as JSONContent, EXTENSIONS);
     return `${escape(front)},${escape(back)}`;
   });
 
