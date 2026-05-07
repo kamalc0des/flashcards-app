@@ -63,7 +63,7 @@ export default async function DashboardPage() {
             <div className="text-4xl">📚</div>
             <div>
               <p className="text-white font-semibold mb-1">{t("empty")}</p>
-              <p className="text-zinc-500 text-sm">Créez votre premier paquet pour commencer</p>
+              <p className="text-zinc-500 text-sm">{t("emptyHint")}</p>
             </div>
             <Link
               href="/decks/new"
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
         )}
 
         <p className="text-center text-zinc-700 text-xs mt-10">
-          {deckSummaries.reduce((acc, d) => acc + d.cardCount, 0)} cartes au total
+          {t("cardsTotal", { count: deckSummaries.reduce((acc, d) => acc + d.cardCount, 0) })}
         </p>
       </div>
     </main>

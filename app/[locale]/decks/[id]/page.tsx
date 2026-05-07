@@ -42,7 +42,7 @@ export default async function DeckDetailPage({
           className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-sm mb-8"
         >
           <ChevronLeft className="h-4 w-4" />
-          Mes paquets
+          {t("myDecks")}
         </Link>
 
         {/* Inline editable name/description */}
@@ -56,9 +56,9 @@ export default async function DeckDetailPage({
 
         {/* Stats row */}
         <p className="text-zinc-600 text-xs mb-6">
-          {deck.cards.length} carte{deck.cards.length !== 1 ? "s" : ""}
-          {dueCount > 0 && <span className="text-amber-400 ml-2">· {dueCount} à réviser</span>}
-          {suspendedCount > 0 && <span className="ml-2">· {suspendedCount} suspendue{suspendedCount !== 1 ? "s" : ""}</span>}
+          {t(deck.cards.length > 1 ? "cardCountPlural" : "cardCount", { count: deck.cards.length })}
+          {dueCount > 0 && <span className="text-amber-400 ml-2">· {t("dueCount", { count: dueCount })}</span>}
+          {suspendedCount > 0 && <span className="ml-2">· {t("suspendedCount", { count: suspendedCount })}</span>}
         </p>
 
         {/* Action buttons */}
@@ -94,7 +94,7 @@ export default async function DeckDetailPage({
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 active:scale-95 transition-all"
             >
               <Download className="h-4 w-4" />
-              Exporter CSV
+              {t("export")}
             </a>
           )}
         </div>
@@ -105,7 +105,7 @@ export default async function DeckDetailPage({
             <div className="text-3xl">🃏</div>
             <div>
               <p className="text-white font-semibold mb-1">{t("noCards")}</p>
-              <p className="text-zinc-500 text-sm">Ajoutez votre première carte pour commencer à réviser</p>
+              <p className="text-zinc-500 text-sm">{t("noCardsHint")}</p>
             </div>
             <div className="flex gap-2">
               <Link

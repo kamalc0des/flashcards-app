@@ -31,13 +31,16 @@
   "dashboard": {
     "title": "My Decks",
     "empty": "No decks yet. Create your first deck to get started.",
+    "emptyHint": "Create your first deck to get started",
     "newDeck": "New deck",
     "cards": "{count} cards",
-    "due": "{count} due"
+    "due": "{count} due",
+    "cardsTotal": "{count} cards total"
   },
   "deck": {
     "study": "Study",
     "import": "Import file",
+    "export": "Export CSV",
     "addCard": "Add card",
     "editDeck": "Edit deck",
     "deleteDeck": "Delete deck",
@@ -46,6 +49,7 @@
     "delete": "Delete",
     "cards": "Cards",
     "noCards": "No cards yet. Add your first card or import a CSV.",
+    "noCardsHint": "Add your first card to start studying",
     "front": "Front",
     "back": "Back",
     "created": "Created",
@@ -53,7 +57,14 @@
     "editCard": "Edit card",
     "deleteCard": "Delete card",
     "suspendCard": "Suspend card",
-    "unsuspendCard": "Unsuspend card"
+    "unsuspendCard": "Unsuspend card",
+    "myDecks": "My decks",
+    "cardCount": "{count} card",
+    "cardCountPlural": "{count} cards",
+    "dueCount": "{count} due",
+    "suspendedCount": "{count} suspended",
+    "cardActive": "Active",
+    "cardSuspended": "Suspended"
   },
   "deckForm": {
     "createTitle": "Create deck",
@@ -84,15 +95,27 @@
     "hard": "Hard",
     "good": "Good",
     "easy": "Easy",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
     "flip": "Show answer",
+    "tapToReveal": "Tap to reveal",
+    "question": "Question",
+    "answer": "Answer",
     "done": "Session complete!",
     "doneDesc": "You've reviewed all due cards for this deck.",
+    "masteredCount": "{count} card mastered",
+    "masteredCountPlural": "{count} cards mastered",
+    "studyAgain": "Study again",
     "backToDeck": "Back to deck",
     "progress": "{known} / {total} cards reviewed",
     "empty": "No cards due for review.",
     "emptyDesc": "Come back later when more cards are scheduled.",
     "card": "card",
-    "cards": "cards"
+    "cards": "cards",
+    "resumeSession": "Session in progress",
+    "resumeButton": "Resume session",
+    "newSession": "New session",
+    "loading": "Loading..."
   },
   "import": {
     "title": "Import CSV",

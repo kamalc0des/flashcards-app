@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { RichEditor } from "@/components/editor/RichEditor";
 import type { StudyCard as StudyCardType } from "@/types";
 
@@ -11,6 +12,7 @@ interface StudyCardProps {
 }
 
 export function StudyCard({ card, flipped, onFlip, accentColor }: StudyCardProps) {
+  const t = useTranslations("study");
   return (
     <div
       className="relative w-full h-full cursor-pointer"
@@ -30,7 +32,7 @@ export function StudyCard({ card, flipped, onFlip, accentColor }: StudyCardProps
           style={{ backfaceVisibility: "hidden" }}
         >
           <div className="flex items-center justify-between px-5 pt-4 pb-2">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Question</span>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">{t("question")}</span>
           </div>
           <div className="flex-1 flex flex-col items-center justify-center px-6 pb-6 text-center gap-4">
             <div className="w-full">
@@ -41,7 +43,7 @@ export function StudyCard({ card, flipped, onFlip, accentColor }: StudyCardProps
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
-              Appuyer pour révéler
+              {t("tapToReveal")}
             </span>
           </div>
         </div>
@@ -52,13 +54,13 @@ export function StudyCard({ card, flipped, onFlip, accentColor }: StudyCardProps
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div className="flex items-center px-5 pt-4 pb-2">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Question</span>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">{t("question")}</span>
           </div>
           <div className="px-5 pb-3 text-zinc-400 text-sm border-b border-zinc-800">
             <RichEditor content={card.front} editable={false} />
           </div>
           <div className="flex items-center px-5 pt-3 pb-2">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Réponse</span>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">{t("answer")}</span>
           </div>
           <div className="flex-1 overflow-y-auto px-5 pb-5 min-h-0">
             <RichEditor content={card.back} editable={false} />

@@ -132,7 +132,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   if (loading) {
     return (
       <div className="h-dvh bg-zinc-950 flex items-center justify-center">
-        <div className="text-zinc-500 animate-pulse text-sm">Loading...</div>
+        <div className="text-zinc-500 animate-pulse text-sm">{t("loading")}</div>
       </div>
     );
   }
@@ -145,9 +145,9 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
       <div className="h-dvh bg-zinc-950 text-white flex flex-col items-center justify-center px-6">
         <div className="w-full max-w-sm text-center">
           <div className="text-4xl mb-5">⏸️</div>
-          <h2 className="text-xl font-bold mb-2">Session en cours</h2>
+          <h2 className="text-xl font-bold mb-2">{t("resumeSession")}</h2>
           <p className="text-zinc-400 text-sm mb-1">
-            <span className="text-white font-semibold">{savedSession.learned}</span> / {totalUnique} cartes maîtrisées
+            {t(savedSession.learned > 1 ? "masteredCountPlural" : "masteredCount", { count: savedSession.learned })} / {totalUnique}
           </p>
           <p className="text-zinc-500 text-sm mb-8">
             Deck: <span className="font-semibold" style={{ color: deckColor }}>{deckName}</span>
@@ -158,13 +158,13 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
               className="w-full py-3.5 rounded-2xl font-semibold text-sm text-zinc-950 active:scale-95 transition-all"
               style={{ backgroundColor: deckColor }}
             >
-              Reprendre la session
+              {t("resumeButton")}
             </button>
             <button
               onClick={startFresh}
               className="w-full py-3.5 rounded-2xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 transition-colors"
             >
-              Nouvelle session
+              {t("newSession")}
             </button>
           </div>
         </div>
@@ -194,7 +194,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
           <div className="text-5xl mb-5">🎉</div>
           <h2 className="text-2xl font-bold mb-2">{t("done")}</h2>
           <p className="text-zinc-400 text-sm mb-1">
-            <span className="text-white font-semibold">{learned}</span> carte{learned > 1 ? "s" : ""} maîtrisée{learned > 1 ? "s" : ""}
+            {t(learned > 1 ? "masteredCountPlural" : "masteredCount", { count: learned })}
           </p>
           <p className="text-zinc-500 text-sm mb-8">
             Deck: <span className="font-semibold" style={{ color: deckColor }}>{deckName}</span>
@@ -205,7 +205,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
               className="w-full py-3.5 rounded-2xl font-semibold text-sm text-zinc-950 transition-colors active:scale-95"
               style={{ backgroundColor: deckColor }}
             >
-              Recommencer
+              {t("studyAgain")}
             </button>
             <Link
               href="/dashboard"

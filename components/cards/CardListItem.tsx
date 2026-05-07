@@ -65,7 +65,7 @@ export function CardListItem({
               ? "bg-amber-950/60 text-amber-400 border border-amber-800/50"
               : "bg-emerald-950/60 text-emerald-400 border border-emerald-800/50"
           }`}>
-            {suspended ? "Suspendue" : "Active"}
+            {suspended ? t("cardSuspended") : t("cardActive")}
           </span>
 
           {/* Suspend / Activate toggle */}
