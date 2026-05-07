@@ -32,9 +32,9 @@ export function sm2(state: SM2State, quality: 0 | 1 | 2 | 3): SM2State & { due: 
 
 export function projectedIntervals(state: SM2State): string[] {
   return ([0, 1, 2, 3] as const).map((q) => {
+    if (q === 0) return "revoir";
     const next = sm2(state, q);
-    if (next.interval <= 0) return "< 1 min";
-    if (next.interval === 1) return "1 day";
-    return `${next.interval} days`;
+    if (next.interval === 1) return "1 jour";
+    return `${next.interval} jours`;
   });
 }
