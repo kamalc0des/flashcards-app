@@ -6,7 +6,7 @@ import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { DeckManager } from "@/components/decks/DeckManager";
 import { CardListItem } from "@/components/cards/CardListItem";
-import { BookOpen, Plus, Upload, ChevronLeft } from "lucide-react";
+import { BookOpen, Plus, Upload, Download, ChevronLeft } from "lucide-react";
 
 export default async function DeckDetailPage({
   params,
@@ -87,6 +87,16 @@ export default async function DeckDetailPage({
             <Upload className="h-4 w-4" />
             {t("import")}
           </Link>
+          {deck.cards.length > 0 && (
+            <a
+              href={`/api/decks/${id}/export`}
+              download
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 active:scale-95 transition-all"
+            >
+              <Download className="h-4 w-4" />
+              Exporter
+            </a>
+          )}
         </div>
 
         {/* Cards */}
