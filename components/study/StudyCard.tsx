@@ -13,8 +13,8 @@ interface StudyCardProps {
 export function StudyCard({ card, flipped, onFlip, accentColor }: StudyCardProps) {
   return (
     <div
-      className="relative w-full flex-1 cursor-pointer"
-      style={{ perspective: "1400px", minHeight: "280px" }}
+      className="relative w-full h-full cursor-pointer"
+      style={{ perspective: "1400px" }}
       onClick={!flipped ? onFlip : undefined}
     >
       <div

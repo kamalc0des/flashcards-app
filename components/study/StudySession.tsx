@@ -108,10 +108,10 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const progress = (current / queue.length) * 100;
 
   return (
-    <div className="min-h-dvh bg-zinc-950 text-white flex flex-col">
-      <div className="w-full max-w-lg mx-auto flex flex-col flex-1 px-4 pt-5 pb-4">
+    <div className="h-dvh bg-zinc-950 text-white flex flex-col overflow-hidden">
+      <div className="w-full max-w-lg mx-auto flex flex-col h-full px-4 pt-5 pb-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 shrink-0">
           <Link
             href={`/decks/${deckId}`}
             className="flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-sm py-1"
@@ -128,7 +128,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
         </div>
 
         {/* Progress bar */}
-        <div className="mb-5">
+        <div className="mb-5 shrink-0">
           <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500"
@@ -137,23 +137,25 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
           </div>
         </div>
 
-        {/* Card */}
-        <div className="flex-1 flex flex-col min-h-0 mb-4">
+        {/* Card — takes all remaining space */}
+        <div className="flex-1 min-h-0 mb-4">
           <StudyCard card={card} flipped={flipped} onFlip={handleFlip} accentColor={deckColor} />
         </div>
 
         {/* Actions */}
-        {!flipped ? (
-          <button
-            onClick={handleFlip}
-            className="w-full py-4 rounded-2xl font-semibold text-base text-zinc-950 active:scale-95 transition-all"
-            style={{ backgroundColor: deckColor }}
-          >
-            {t("flip")}
-          </button>
-        ) : (
-          <ReviewButtons card={card} onReview={handleReview} />
-        )}
+        <div className="shrink-0">
+          {!flipped ? (
+            <button
+              onClick={handleFlip}
+              className="w-full py-4 rounded-2xl font-semibold text-base text-zinc-950 active:scale-95 transition-all"
+              style={{ backgroundColor: deckColor }}
+            >
+              {t("flip")}
+            </button>
+          ) : (
+            <ReviewButtons card={card} onReview={handleReview} />
+          )}
+        </div>
       </div>
     </div>
   );
