@@ -52,6 +52,12 @@ export function StudyCard({ card, flipped, onFlip, accentColor }: StudyCardProps
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div className="flex items-center px-5 pt-4 pb-2">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Question</span>
+          </div>
+          <div className="px-5 pb-3 text-zinc-400 text-sm border-b border-zinc-800">
+            <RichEditor content={card.front} editable={false} />
+          </div>
+          <div className="flex items-center px-5 pt-3 pb-2">
             <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Answer</span>
           </div>
           <div className="flex-1 overflow-y-auto px-5 pb-5 min-h-0">
