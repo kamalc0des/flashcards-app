@@ -125,18 +125,6 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## Deployment
-
-The app is deployed on Vercel and auto-deploys on every push to the `develop` branch.
-
-```bash
-git push origin develop
-```
-
-Required Vercel environment variables: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, `AUTH_URL`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`.
-
----
-
 ## SM-2 Algorithm
 
 Cards are rated as **Correct** or **Incorrect** after each review:
