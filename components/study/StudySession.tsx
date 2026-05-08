@@ -5,7 +5,10 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { StudyCard } from "./StudyCard";
 import { ReviewButtons } from "./ReviewButtons";
+import { RichEditor } from "@/components/editor/RichEditor";
 import type { StudyCard as StudyCardType } from "@/types";
+import type { JSONContent } from "@tiptap/react";
+import { emptyTiptap } from "@/lib/tiptap";
 
 interface StudySessionProps {
   deckId: string;
@@ -52,6 +55,10 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const [loading, setLoading] = useState(true);
   const [learned, setLearned] = useState(0);
   const [savedSession, setSavedSession] = useState<SavedSession | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [editFront, setEditFront] = useState<JSONContent>(emptyTiptap());
+  const [editBack, setEditBack] = useState<JSONContent>(emptyTiptap());
+  const [editSaving, setEditSaving] = useState(false);
 
   useEffect(() => {
     const saved = loadSession(deckId);
@@ -91,6 +98,32 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
     setLearned(savedSession.learned);
     setSavedSession(null);
   }, [savedSession]);
+
+  const openEdit = useCallback(() => {
+    const card = queue[current];
+    if (!card) return;
+    setEditFront(card.front as JSONContent);
+    setEditBack(card.back as JSONContent);
+    setEditing(true);
+  }, [queue, current]);
+
+  const saveEdit = useCallback(async () => {
+    const card = queue[current];
+    if (!card) return;
+    setEditSaving(true);
+    await fetch(`/api/decks/${deckId}/cards/${card.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ front: editFront, back: editBack }),
+    });
+    setQueue((q) => {
+      const next = [...q];
+      next[current] = { ...next[current], front: editFront, back: editBack };
+      return next;
+    });
+    setEditSaving(false);
+    setEditing(false);
+  }, [queue, current, deckId, editFront, editBack]);
 
   const handleFlip = useCallback(() => setFlipped(true), []);
 
@@ -245,7 +278,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const progress = (learned / totalUnique) * 100;
 
   return (
-    <div className="h-dvh bg-zinc-950 text-white flex flex-col overflow-hidden">
+    <div className="h-dvh bg-zinc-950 text-white flex flex-col overflow-hidden relative">
       <div className="w-full max-w-lg mx-auto flex flex-col h-full px-4 pt-5 pb-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-4 shrink-0">
@@ -276,7 +309,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
 
         {/* Card */}
         <div className="flex-1 min-h-0 mb-4">
-          <StudyCard key={card.id} card={card} flipped={flipped} onFlip={handleFlip} accentColor={deckColor} />
+          <StudyCard key={card.id} card={card} flipped={flipped} onFlip={handleFlip} accentColor={deckColor} onEdit={openEdit} />
         </div>
 
         {/* Actions */}
@@ -294,6 +327,47 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
           )}
         </div>
       </div>
+
+      {/* Inline edit overlay */}
+      {editing && (
+        <div className="absolute inset-0 bg-zinc-950/95 flex flex-col z-10 px-4 pt-5 pb-4">
+          <div className="w-full max-w-lg mx-auto flex flex-col h-full">
+            <div className="flex items-center justify-between mb-6 shrink-0">
+              <h2 className="text-base font-semibold">{t("editCard")}</h2>
+              <button
+                onClick={() => setEditing(false)}
+                className="text-zinc-500 hover:text-white transition-colors text-sm"
+              >
+                {t("cancelEdit")}
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto flex flex-col gap-5 min-h-0">
+              <div className="flex flex-col gap-2">
+                <label className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">{t("front")}</label>
+                <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-3">
+                  <RichEditor content={editFront} onChange={setEditFront} />
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-[10px] font-semibold uppercase tracking-widest text-zinc-600">{t("back")}</label>
+                <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-3">
+                  <RichEditor content={editBack} onChange={setEditBack} />
+                </div>
+              </div>
+            </div>
+            <div className="shrink-0 pt-4">
+              <button
+                onClick={saveEdit}
+                disabled={editSaving}
+                className="w-full py-4 rounded-2xl font-semibold text-base text-zinc-950 active:scale-95 transition-all disabled:opacity-50"
+                style={{ backgroundColor: deckColor }}
+              >
+                {editSaving ? t("saving") : t("saveEdit")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
