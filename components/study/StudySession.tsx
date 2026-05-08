@@ -161,7 +161,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
               {t("resumeButton")}
             </button>
             <button
-              onClick={startFresh}
+              onClick={() => startFresh()}
               className="w-full py-3.5 rounded-2xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 transition-colors"
             >
               {t("newSession")}
