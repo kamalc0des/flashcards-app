@@ -29,8 +29,17 @@ export default async function DeckDetailPage({
 
   if (!deck || deck.userId !== session.user.id) notFound();
 
-  const dueCount = await prisma.cardReview.count({
-    where: { userId: session.user.id, card: { deckId: id }, due: { lte: new Date() } },
+  const now = new Date();
+
+  const dueCount = await prisma.card.count({
+    where: {
+      deckId: id,
+      suspended: false,
+      OR: [
+        { cardReviews: { some: { userId: session.user.id, due: { lte: now } } } },
+        { cardReviews: { none: { userId: session.user.id } } },
+      ],
+    },
   });
 
   const suspendedCount = deck.cards.filter((c) => c.suspended).length;

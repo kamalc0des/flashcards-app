@@ -21,6 +21,8 @@ interface SavedSession {
   queue: StudyCardType[];
   current: number;
   learned: number;
+  totalCards: number;
+  mode: "normal" | "all";
 }
 
 function sessionKey(deckId: string) {
@@ -53,9 +55,11 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const router = useRouter();
   const [queue, setQueue] = useState<StudyCardType[]>([]);
   const [current, setCurrent] = useState(0);
+  const [totalCards, setTotalCards] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [loading, setLoading] = useState(true);
   const [learned, setLearned] = useState(0);
+  const [mode, setMode] = useState<"normal" | "all">("normal");
   const [savedSession, setSavedSession] = useState<SavedSession | null>(null);
   const [editing, setEditing] = useState(false);
   const [editFront, setEditFront] = useState<JSONContent>(emptyTiptap());
@@ -74,8 +78,11 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
         .then((data: StudyCardType[]) => {
           const shuffled = [...data].sort(() => Math.random() - 0.5).slice(0, 20);
           setQueue(shuffled);
+          setTotalCards(shuffled.length);
+          setMode("normal");
           setLoading(false);
-        });
+        })
+        .catch(() => setLoading(false));
     }
   }, [deckId]);
 
@@ -87,9 +94,12 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
       .then((r) => r.json())
       .then((data: StudyCardType[]) => {
         const shuffled = [...data].sort(() => Math.random() - 0.5);
-        setQueue(all ? shuffled : shuffled.slice(0, 20));
+        const cards = all ? shuffled : shuffled.slice(0, 20);
+        setQueue(cards);
+        setTotalCards(cards.length);
         setCurrent(0);
         setLearned(0);
+        setMode(all ? "all" : "normal");
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -100,6 +110,8 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
     setQueue(savedSession.queue);
     setCurrent(savedSession.current);
     setLearned(savedSession.learned);
+    setTotalCards(savedSession.totalCards);
+    setMode(savedSession.mode);
     setSavedSession(null);
   }, [savedSession]);
 
@@ -136,41 +148,44 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
     (quality: 0 | 1 | 2 | 3) => {
       const card = queue[current];
 
-      // Update UI immediately — don't wait for the API
       setFlipped(false);
 
       if (quality === 0) {
-        // Again — requeue at end, not counted as learned
+        // Incorrect — requeue at end, not counted as learned
         setQueue((q) => {
           const next = [...q];
           next.splice(current, 1);
           next.push(card);
-          saveSession(deckId, { queue: next, current, learned });
+          saveSession(deckId, { queue: next, current, learned, totalCards, mode });
           return next;
         });
       } else {
-        // Hard / Good / Easy — card is learned
+        // Correct — card is learned
         const nextCurrent = current + 1;
         const nextLearned = learned + 1;
         setLearned(nextLearned);
         setCurrent(nextCurrent);
         if (nextCurrent < queue.length) {
-          saveSession(deckId, { queue, current: nextCurrent, learned: nextLearned });
+          saveSession(deckId, { queue, current: nextCurrent, learned: nextLearned, totalCards, mode });
         } else {
           clearSession(deckId);
           router.refresh();
         }
       }
 
-      // Fire review POST in background
       fetch(`/api/decks/${deckId}/study`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cardId: card.id, quality }),
       }).catch(() => {});
     },
-    [queue, current, deckId, learned]
+    [queue, current, deckId, learned, totalCards, mode]
   );
+
+  const handleBack = useCallback(() => {
+    router.refresh();
+    router.push(`/decks/${deckId}`);
+  }, [router, deckId]);
 
   if (loading) {
     return (
@@ -183,17 +198,21 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   // Resume prompt
   if (savedSession) {
     const remaining = savedSession.queue.length - savedSession.current;
-    const totalUnique = savedSession.learned + remaining;
     return (
       <div className="h-dvh bg-zinc-950 text-white flex flex-col items-center justify-center px-6">
         <div className="w-full max-w-sm text-center">
           <div className="text-4xl mb-5">⏸️</div>
           <h2 className="text-xl font-bold mb-2">{t("resumeSession")}</h2>
+          <p className="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-4">
+            {savedSession.mode === "all" ? t("sessionModeAll") : t("sessionModeNormal")}
+          </p>
           <p className="text-zinc-400 text-sm mb-1">
-            {t(savedSession.learned > 1 ? "masteredCountPlural" : "masteredCount", { count: savedSession.learned })} / {totalUnique}
+            {t(savedSession.learned > 1 ? "masteredCountPlural" : "masteredCount", { count: savedSession.learned })}
+            {" · "}
+            {t("cardsRemaining", { count: remaining })}
           </p>
           <p className="text-zinc-500 text-sm mb-8">
-            Deck: <span className="font-semibold" style={{ color: deckColor }}>{deckName}</span>
+            <span className="font-semibold" style={{ color: deckColor }}>{deckName}</span>
           </p>
           <div className="flex flex-col gap-3">
             <button
@@ -236,9 +255,12 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
             >
               {t("studyAll")}
             </button>
-            <Link href={`/decks/${deckId}`} className="text-zinc-400 hover:text-white text-sm transition-colors">
+            <button
+              onClick={handleBack}
+              className="text-zinc-400 hover:text-white text-sm transition-colors"
+            >
               ← {t("backToDeck")}
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -255,7 +277,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
             {t(learned > 1 ? "masteredCountPlural" : "masteredCount", { count: learned })}
           </p>
           <p className="text-zinc-500 text-sm mb-8">
-            Deck: <span className="font-semibold" style={{ color: deckColor }}>{deckName}</span>
+            <span className="font-semibold" style={{ color: deckColor }}>{deckName}</span>
           </p>
           <div className="flex flex-col gap-3">
             <button
@@ -271,12 +293,12 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
             >
               {t("studyAll")}
             </button>
-            <Link
-              href="/dashboard"
-              className="w-full py-3.5 rounded-2xl border border-zinc-700 text-zinc-300 font-semibold text-sm text-center hover:bg-zinc-800 transition-colors"
+            <button
+              onClick={handleBack}
+              className="w-full py-3.5 rounded-2xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 transition-colors"
             >
               {t("backToDeck")}
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -284,26 +306,25 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   }
 
   const card = queue[current];
-  const totalUnique = learned + (queue.length - current);
-  const progress = (learned / totalUnique) * 100;
+  const progress = totalCards > 0 ? (learned / totalCards) * 100 : 0;
 
   return (
     <div className="h-dvh bg-zinc-950 text-white flex flex-col overflow-hidden relative">
       <div className="w-full max-w-lg mx-auto flex flex-col h-full px-4 pt-5 pb-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-4 shrink-0">
-          <Link
-            href={`/decks/${deckId}`}
+          <button
+            onClick={handleBack}
             className="flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-sm py-1"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             {deckName}
-          </Link>
+          </button>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: deckColor }} />
-            <span className="text-sm text-zinc-400">{learned} / {totalUnique}</span>
+            <span className="text-sm text-zinc-400">{learned} / {totalCards}</span>
           </div>
         </div>
 
