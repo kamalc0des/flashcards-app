@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { StudyCard } from "./StudyCard";
 import { ReviewButtons } from "./ReviewButtons";
@@ -49,6 +50,7 @@ function clearSession(deckId: string) {
 
 export function StudySession({ deckId, deckName, deckColor }: StudySessionProps) {
   const t = useTranslations("study");
+  const router = useRouter();
   const [queue, setQueue] = useState<StudyCardType[]>([]);
   const [current, setCurrent] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -156,6 +158,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
           saveSession(deckId, { queue, current: nextCurrent, learned: nextLearned });
         } else {
           clearSession(deckId);
+          router.refresh();
         }
       }
 
