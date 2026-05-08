@@ -21,10 +21,14 @@ export default async function DashboardPage() {
     include: {
       _count: { select: { cards: true } },
       cards: {
+        where: { suspended: false },
         include: {
           cardReviews: {
             where: { userId: session.user.id, due: { lte: now } },
             select: { id: true },
+          },
+          _count: {
+            select: { cardReviews: { where: { userId: session.user.id } } },
           },
         },
       },
@@ -38,7 +42,7 @@ export default async function DashboardPage() {
     color: d.color,
     createdAt: d.createdAt.toISOString(),
     cardCount: d._count.cards,
-    dueCount: d.cards.filter((c) => c.cardReviews.length > 0).length,
+    dueCount: d.cards.filter((c) => c.cardReviews.length > 0 || c._count.cardReviews === 0).length,
   }));
 
   return (
