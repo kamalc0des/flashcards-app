@@ -1,0 +1,166 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "newDeck": "New deck"
+  },
+  "landing": {
+    "hero": {
+      "title": "Master anything with smart flashcards",
+      "subtitle": "Spaced repetition, rich card editor, and Anki-compatible import — all in one place.",
+      "cta": "Get started for free",
+      "signIn": "Sign in"
+    },
+    "features": {
+      "title": "Everything you need to learn effectively",
+      "spaced": {
+        "title": "Spaced repetition",
+        "desc": "SM-2 algorithm schedules reviews at the perfect moment so you never forget."
+      },
+      "editor": {
+        "title": "Rich card editor",
+        "desc": "Format cards with bold, colors, and syntax-highlighted code blocks."
+      },
+      "import": {
+        "title": "Anki CSV import",
+        "desc": "Import your existing Anki decks in seconds with a simple CSV upload."
+      }
+    }
+  },
+  "dashboard": {
+    "title": "My Decks",
+    "empty": "No decks yet. Create your first deck to get started.",
+    "emptyHint": "Create your first deck to get started",
+    "newDeck": "New deck",
+    "cards": "{count} cards",
+    "due": "{count} due",
+    "cardsTotal": "{count} cards total"
+  },
+  "deck": {
+    "study": "Study",
+    "import": "Import file",
+    "export": "Export CSV",
+    "addCard": "Add card",
+    "editDeck": "Edit deck",
+    "deleteDeck": "Delete deck",
+    "deleteConfirm": "Are you sure? This will delete the deck and all its cards.",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "cards": "Cards",
+    "noCards": "No cards yet. Add your first card or import a CSV.",
+    "noCardsHint": "Add your first card to start studying",
+    "front": "Front",
+    "back": "Back",
+    "created": "Created",
+    "actions": "Actions",
+    "editCard": "Edit card",
+    "deleteCard": "Delete card",
+    "suspendCard": "Suspend card",
+    "unsuspendCard": "Unsuspend card",
+    "myDecks": "My decks",
+    "cardCount": "{count} card",
+    "cardCountPlural": "{count} cards",
+    "dueCount": "{count} due",
+    "suspendedCount": "{count} suspended",
+    "cardActive": "Active",
+    "cardSuspended": "Suspended"
+  },
+  "deckForm": {
+    "createTitle": "Create deck",
+    "editTitle": "Edit deck",
+    "name": "Name",
+    "namePlaceholder": "e.g. Spanish vocabulary",
+    "description": "Description",
+    "descriptionPlaceholder": "Optional description",
+    "color": "Color",
+    "create": "Create deck",
+    "save": "Save changes",
+    "cancel": "Cancel"
+  },
+  "cardForm": {
+    "createTitle": "Add card",
+    "editTitle": "Edit card",
+    "front": "Front",
+    "back": "Back",
+    "frontPlaceholder": "Question or term...",
+    "backPlaceholder": "Answer or definition...",
+    "create": "Add card",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "backToDeck": "Back to deck"
+  },
+  "study": {
+    "again": "Again",
+    "hard": "Hard",
+    "good": "Good",
+    "easy": "Easy",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
+    "flip": "Show answer",
+    "tapToReveal": "Tap to reveal",
+    "question": "Question",
+    "answer": "Answer",
+    "done": "Session complete!",
+    "doneDesc": "You've reviewed all due cards for this deck.",
+    "masteredCount": "{count} card mastered",
+    "masteredCountPlural": "{count} cards mastered",
+    "studyAgain": "Study again",
+    "backToDeck": "Back to deck",
+    "progress": "{known} / {total} cards reviewed",
+    "empty": "No cards due for review.",
+    "emptyDesc": "Come back later when more cards are scheduled.",
+    "card": "card",
+    "cards": "cards",
+    "resumeSession": "Session in progress",
+    "resumeButton": "Resume session",
+    "newSession": "New session",
+    "loading": "Loading..."
+  },
+  "import": {
+    "title": "Import CSV",
+    "dropzone": "Drop a CSV or TXT file here, or click to browse",
+    "dropzoneActive": "Drop the file here",
+    "preview": "Preview",
+    "frontColumn": "Front column",
+    "backColumn": "Back column",
+    "columnIndex": "Column {n}",
+    "importButton": "Import {count} cards",
+    "importing": "Importing...",
+    "success": "{count} cards imported successfully.",
+    "error": "Import failed. Please check your file and try again.",
+    "noFile": "No file selected.",
+    "rows": "{count} rows detected",
+    "backToDeck": "Back to deck"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "••••••••",
+    "orContinueWith": "Or continue with",
+    "google": "Continue with Google",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUpLink": "Sign up",
+    "signInLink": "Sign in",
+    "signingIn": "Signing in...",
+    "signingUp": "Creating account...",
+    "invalidCredentials": "Invalid email or password.",
+    "emailTaken": "An account with this email already exists."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back"
+  }
+}

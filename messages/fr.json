@@ -1,0 +1,166 @@
+{
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "newDeck": "Nouveau paquet"
+  },
+  "landing": {
+    "hero": {
+      "title": "Maîtrisez tout avec des flashcards intelligentes",
+      "subtitle": "Répétition espacée, éditeur riche et import compatible Anki — tout en un.",
+      "cta": "Commencer gratuitement",
+      "signIn": "Se connecter"
+    },
+    "features": {
+      "title": "Tout ce qu'il faut pour apprendre efficacement",
+      "spaced": {
+        "title": "Répétition espacée",
+        "desc": "L'algorithme SM-2 planifie les révisions au bon moment pour ne jamais oublier."
+      },
+      "editor": {
+        "title": "Éditeur de cartes riche",
+        "desc": "Formatez vos cartes avec du gras, des couleurs et des blocs de code colorisés."
+      },
+      "import": {
+        "title": "Import CSV Anki",
+        "desc": "Importez vos paquets Anki existants en quelques secondes via un fichier CSV."
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Mes paquets",
+    "empty": "Aucun paquet pour l'instant. Créez votre premier paquet pour commencer.",
+    "emptyHint": "Créez votre premier paquet pour commencer",
+    "newDeck": "Nouveau paquet",
+    "cards": "{count} cartes",
+    "due": "{count} à réviser",
+    "cardsTotal": "{count} cartes au total"
+  },
+  "deck": {
+    "study": "Réviser",
+    "import": "Importer un fichier",
+    "export": "Exporter CSV",
+    "addCard": "Ajouter une carte",
+    "editDeck": "Modifier le paquet",
+    "deleteDeck": "Supprimer le paquet",
+    "deleteConfirm": "Êtes-vous sûr ? Cela supprimera le paquet et toutes ses cartes.",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "cards": "Cartes",
+    "noCards": "Aucune carte. Ajoutez votre première carte ou importez un CSV.",
+    "noCardsHint": "Ajoutez votre première carte pour commencer à réviser",
+    "front": "Recto",
+    "back": "Verso",
+    "created": "Créé le",
+    "actions": "Actions",
+    "editCard": "Modifier la carte",
+    "deleteCard": "Supprimer la carte",
+    "suspendCard": "Suspendre la carte",
+    "unsuspendCard": "Réactiver la carte",
+    "myDecks": "Mes paquets",
+    "cardCount": "{count} carte",
+    "cardCountPlural": "{count} cartes",
+    "dueCount": "{count} à réviser",
+    "suspendedCount": "{count} suspendue",
+    "cardActive": "Active",
+    "cardSuspended": "Suspendue"
+  },
+  "deckForm": {
+    "createTitle": "Créer un paquet",
+    "editTitle": "Modifier le paquet",
+    "name": "Nom",
+    "namePlaceholder": "ex. Vocabulaire espagnol",
+    "description": "Description",
+    "descriptionPlaceholder": "Description facultative",
+    "color": "Couleur",
+    "create": "Créer le paquet",
+    "save": "Enregistrer",
+    "cancel": "Annuler"
+  },
+  "cardForm": {
+    "createTitle": "Ajouter une carte",
+    "editTitle": "Modifier la carte",
+    "front": "Recto",
+    "back": "Verso",
+    "frontPlaceholder": "Question ou terme...",
+    "backPlaceholder": "Réponse ou définition...",
+    "create": "Ajouter la carte",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "backToDeck": "Retour au paquet"
+  },
+  "study": {
+    "again": "À revoir",
+    "hard": "Difficile",
+    "good": "Bien",
+    "easy": "Facile",
+    "correct": "Correct",
+    "incorrect": "Pas correct",
+    "flip": "Voir la réponse",
+    "tapToReveal": "Appuyer pour révéler",
+    "question": "Question",
+    "answer": "Réponse",
+    "done": "Session terminée !",
+    "doneDesc": "Vous avez révisé toutes les cartes prévues pour ce paquet.",
+    "masteredCount": "{count} carte maîtrisée",
+    "masteredCountPlural": "{count} cartes maîtrisées",
+    "studyAgain": "Recommencer",
+    "backToDeck": "Retour au paquet",
+    "progress": "{known} / {total} cartes révisées",
+    "empty": "Aucune carte à réviser.",
+    "emptyDesc": "Revenez plus tard lorsque d'autres cartes seront planifiées.",
+    "card": "carte",
+    "cards": "cartes",
+    "resumeSession": "Session en cours",
+    "resumeButton": "Reprendre la session",
+    "newSession": "Nouvelle session",
+    "loading": "Chargement..."
+  },
+  "import": {
+    "title": "Importer un CSV",
+    "dropzone": "Déposez un fichier CSV ou TXT ici, ou cliquez pour parcourir",
+    "dropzoneActive": "Déposez le fichier ici",
+    "preview": "Aperçu",
+    "frontColumn": "Colonne recto",
+    "backColumn": "Colonne verso",
+    "columnIndex": "Colonne {n}",
+    "importButton": "Importer {count} cartes",
+    "importing": "Importation...",
+    "success": "{count} cartes importées avec succès.",
+    "error": "L'import a échoué. Vérifiez votre fichier et réessayez.",
+    "noFile": "Aucun fichier sélectionné.",
+    "rows": "{count} lignes détectées",
+    "backToDeck": "Retour au paquet"
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "name": "Nom",
+    "namePlaceholder": "Votre nom",
+    "emailPlaceholder": "vous@exemple.com",
+    "passwordPlaceholder": "••••••••",
+    "orContinueWith": "Ou continuer avec",
+    "google": "Continuer avec Google",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "signUpLink": "S'inscrire",
+    "signInLink": "Se connecter",
+    "signingIn": "Connexion...",
+    "signingUp": "Création du compte...",
+    "invalidCredentials": "E-mail ou mot de passe invalide.",
+    "emailTaken": "Un compte avec cet e-mail existe déjà."
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue.",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour"
+  }
+}
