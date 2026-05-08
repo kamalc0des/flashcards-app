@@ -255,7 +255,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
 
         {/* Card */}
         <div className="flex-1 min-h-0 mb-4">
-          <StudyCard card={card} flipped={flipped} onFlip={handleFlip} accentColor={deckColor} />
+          <StudyCard key={card.id} card={card} flipped={flipped} onFlip={handleFlip} accentColor={deckColor} />
         </div>
 
         {/* Actions */}
