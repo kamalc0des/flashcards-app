@@ -84,8 +84,8 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
     fetch(`/api/decks/${deckId}/study-queue${all ? "?all=true" : ""}`)
       .then((r) => r.json())
       .then((data: StudyCardType[]) => {
-        const shuffled = [...data].sort(() => Math.random() - 0.5).slice(0, 20);
-        setQueue(shuffled);
+        const shuffled = [...data].sort(() => Math.random() - 0.5);
+        setQueue(all ? shuffled : shuffled.slice(0, 20));
         setCurrent(0);
         setLearned(0);
         setLoading(false);
