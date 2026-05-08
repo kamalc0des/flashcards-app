@@ -59,6 +59,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const [editFront, setEditFront] = useState<JSONContent>(emptyTiptap());
   const [editBack, setEditBack] = useState<JSONContent>(emptyTiptap());
   const [editSaving, setEditSaving] = useState(false);
+  const [cardVersion, setCardVersion] = useState(0);
 
   useEffect(() => {
     const saved = loadSession(deckId);
@@ -121,6 +122,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
       next[current] = { ...next[current], front: editFront, back: editBack };
       return next;
     });
+    setCardVersion((v) => v + 1);
     setEditSaving(false);
     setEditing(false);
   }, [queue, current, deckId, editFront, editBack]);
@@ -309,7 +311,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
 
         {/* Card */}
         <div className="flex-1 min-h-0 mb-4">
-          <StudyCard key={card.id} card={card} flipped={flipped} onFlip={handleFlip} accentColor={deckColor} onEdit={openEdit} />
+          <StudyCard key={`${card.id}-${cardVersion}`} card={card} flipped={flipped} onFlip={handleFlip} accentColor={deckColor} onEdit={openEdit} />
         </div>
 
         {/* Actions */}
