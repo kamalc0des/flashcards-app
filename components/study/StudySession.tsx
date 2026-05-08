@@ -89,7 +89,8 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
         setCurrent(0);
         setLearned(0);
         setLoading(false);
-      });
+      })
+      .catch(() => setLoading(false));
   }, [deckId]);
 
   const resumeSession = useCallback(() => {
@@ -130,13 +131,10 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const handleFlip = useCallback(() => setFlipped(true), []);
 
   const handleReview = useCallback(
-    async (quality: 0 | 1 | 2 | 3) => {
+    (quality: 0 | 1 | 2 | 3) => {
       const card = queue[current];
-      await fetch(`/api/decks/${deckId}/study`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cardId: card.id, quality }),
-      });
+
+      // Update UI immediately — don't wait for the API
       setFlipped(false);
 
       if (quality === 0) {
@@ -160,6 +158,13 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
           clearSession(deckId);
         }
       }
+
+      // Fire review POST in background
+      fetch(`/api/decks/${deckId}/study`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cardId: card.id, quality }),
+      }).catch(() => {});
     },
     [queue, current, deckId, learned]
   );
