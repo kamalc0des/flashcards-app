@@ -116,6 +116,12 @@
     "resumeButton": "Reprendre la session",
     "newSession": "Nouvelle session",
     "studyAll": "Réviser toutes les cartes",
+    "editCard": "Modifier la carte",
+    "saveEdit": "Enregistrer & continuer",
+    "cancelEdit": "Annuler",
+    "saving": "Enregistrement...",
+    "front": "Recto",
+    "back": "Verso",
     "loading": "Chargement..."
   },
   "import": {

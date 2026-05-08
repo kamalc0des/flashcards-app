@@ -116,6 +116,12 @@
     "resumeButton": "Resume session",
     "newSession": "New session",
     "studyAll": "Study all cards",
+    "editCard": "Edit card",
+    "saveEdit": "Save & continue",
+    "cancelEdit": "Cancel",
+    "saving": "Saving...",
+    "front": "Front",
+    "back": "Back",
     "loading": "Loading..."
   },
   "import": {
