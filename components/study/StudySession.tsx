@@ -69,11 +69,11 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
     }
   }, [deckId]);
 
-  const startFresh = useCallback(() => {
+  const startFresh = useCallback((all = false) => {
     clearSession(deckId);
     setSavedSession(null);
     setLoading(true);
-    fetch(`/api/decks/${deckId}/study-queue`)
+    fetch(`/api/decks/${deckId}/study-queue${all ? "?all=true" : ""}`)
       .then((r) => r.json())
       .then((data: StudyCardType[]) => {
         const shuffled = [...data].sort(() => Math.random() - 0.5).slice(0, 20);
@@ -166,6 +166,12 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
             >
               {t("newSession")}
             </button>
+            <button
+              onClick={() => startFresh(true)}
+              className="w-full py-3.5 rounded-2xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 transition-colors"
+            >
+              {t("studyAll")}
+            </button>
           </div>
         </div>
       </div>
@@ -179,9 +185,18 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
           <div className="text-4xl mb-4">🎉</div>
           <h2 className="text-xl font-bold mb-2">{t("empty")}</h2>
           <p className="text-zinc-400 text-sm mb-8">{t("emptyDesc")}</p>
-          <Link href={`/decks/${deckId}`} className="text-zinc-400 hover:text-white text-sm transition-colors">
-            ← {t("backToDeck")}
-          </Link>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => startFresh(true)}
+              className="w-full py-3.5 rounded-2xl font-semibold text-sm text-zinc-950 active:scale-95 transition-all"
+              style={{ backgroundColor: deckColor }}
+            >
+              {t("studyAll")}
+            </button>
+            <Link href={`/decks/${deckId}`} className="text-zinc-400 hover:text-white text-sm transition-colors">
+              ← {t("backToDeck")}
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -201,11 +216,17 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
           </p>
           <div className="flex flex-col gap-3">
             <button
-              onClick={startFresh}
+              onClick={() => startFresh()}
               className="w-full py-3.5 rounded-2xl font-semibold text-sm text-zinc-950 transition-colors active:scale-95"
               style={{ backgroundColor: deckColor }}
             >
               {t("studyAgain")}
+            </button>
+            <button
+              onClick={() => startFresh(true)}
+              className="w-full py-3.5 rounded-2xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 transition-colors"
+            >
+              {t("studyAll")}
             </button>
             <Link
               href="/dashboard"

@@ -115,6 +115,7 @@
     "resumeSession": "Session in progress",
     "resumeButton": "Resume session",
     "newSession": "New session",
+    "studyAll": "Study all cards",
     "loading": "Loading..."
   },
   "import": {
