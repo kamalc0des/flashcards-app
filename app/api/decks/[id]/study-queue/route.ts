@@ -12,9 +12,36 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
+  const { searchParams } = new URL(_req.url);
+  const all = searchParams.get("all") === "true";
+
   const now = new Date();
   const todayStart = new Date(now);
   todayStart.setHours(0, 0, 0, 0);
+
+  if (all) {
+    const cards = await prisma.card.findMany({
+      where: { deckId: id, suspended: false },
+      include: { cardReviews: { where: { userId: session.user.id } } },
+      orderBy: { createdAt: "asc" },
+    });
+    return NextResponse.json(
+      cards.map((c) => ({
+        id: c.id,
+        front: c.front,
+        back: c.back,
+        review: c.cardReviews[0]
+          ? {
+              ease: c.cardReviews[0].ease,
+              interval: c.cardReviews[0].interval,
+              reps: c.cardReviews[0].reps,
+              lapses: c.cardReviews[0].lapses,
+              due: c.cardReviews[0].due.toISOString(),
+            }
+          : null,
+      }))
+    );
+  }
 
   // Due cards not yet reviewed today
   const dueCards = await prisma.card.findMany({

@@ -26,6 +26,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const [learned, setLearned] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [allMode, setAllMode] = useState(false);
 
   const [editing, setEditing] = useState(false);
   const [editFront, setEditFront] = useState<JSONContent>(emptyTiptap());
@@ -33,17 +34,24 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const [editSaving, setEditSaving] = useState(false);
   const [cardVersion, setCardVersion] = useState(0);
 
-  useEffect(() => {
-    fetch(`/api/decks/${deckId}/study-queue`)
+  const loadQueue = useCallback((all = false) => {
+    setLoading(true);
+    setAllMode(all);
+    fetch(`/api/decks/${deckId}/study-queue${all ? "?all=true" : ""}`)
       .then((r) => r.json())
       .then((data: StudyCardType[]) => {
         const shuffled = [...data].sort(() => Math.random() - 0.5);
         setQueue(shuffled);
         setTotalCards(shuffled.length);
+        setCurrent(0);
+        setLearned(0);
+        setFlipped(false);
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, [deckId]);
+
+  useEffect(() => { loadQueue(); }, [loadQueue]);
 
   const handleBack = useCallback(() => {
     router.refresh();
@@ -125,12 +133,21 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
           <div className="text-4xl mb-4">✅</div>
           <h2 className="text-xl font-bold mb-2">{t("empty")}</h2>
           <p className="text-zinc-400 text-sm mb-8">{t("emptyDesc")}</p>
-          <button
-            onClick={handleBack}
-            className="text-zinc-400 hover:text-white text-sm transition-colors"
-          >
-            ← {t("backToDeck")}
-          </button>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => loadQueue(true)}
+              className="w-full py-3.5 rounded-2xl font-semibold text-sm text-zinc-950 active:scale-95 transition-all"
+              style={{ backgroundColor: deckColor }}
+            >
+              {t("studyAll")}
+            </button>
+            <button
+              onClick={handleBack}
+              className="text-zinc-400 hover:text-white text-sm transition-colors"
+            >
+              ← {t("backToDeck")}
+            </button>
+          </div>
         </div>
       </div>
     );
