@@ -29,19 +29,6 @@ export default async function DeckDetailPage({
 
   if (!deck || deck.userId !== session.user.id) notFound();
 
-  const now = new Date();
-
-  const dueCount = await prisma.card.count({
-    where: {
-      deckId: id,
-      suspended: false,
-      OR: [
-        { cardReviews: { some: { userId: session.user.id, due: { lte: now } } } },
-        { cardReviews: { none: { userId: session.user.id } } },
-      ],
-    },
-  });
-
   const suspendedCount = deck.cards.filter((c) => c.suspended).length;
 
   return (
@@ -68,7 +55,6 @@ export default async function DeckDetailPage({
         {/* Stats row */}
         <p className="text-zinc-600 text-xs mb-6">
           {t(deck.cards.length > 1 ? "cardCountPlural" : "cardCount", { count: deck.cards.length })}
-          {dueCount > 0 && <span className="text-amber-400 ml-2">· {t("dueCount", { count: dueCount })}</span>}
           {suspendedCount > 0 && <span className="ml-2">· {t("suspendedCount", { count: suspendedCount })}</span>}
         </p>
 
@@ -80,9 +66,6 @@ export default async function DeckDetailPage({
           >
             <BookOpen className="h-4 w-4" />
             {t("study")}
-            {dueCount > 0 && (
-              <span className="bg-zinc-950/20 text-zinc-950 text-xs font-bold px-1.5 py-0.5 rounded-md">{dueCount}</span>
-            )}
           </Link>
           <Link
             href={`/decks/${id}/cards/new`}

@@ -36,9 +36,6 @@ export function DeckCard({ deck }: { deck: DeckSummary }) {
           )}
           <p className="text-zinc-500 text-sm">
             {deck.cardCount} carte{deck.cardCount !== 1 ? "s" : ""}
-            {deck.dueCount > 0 && (
-              <span className="ml-2 text-amber-400 font-medium">· {deck.dueCount} à réviser</span>
-            )}
           </p>
         </div>
 

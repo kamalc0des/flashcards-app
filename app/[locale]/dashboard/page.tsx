@@ -15,26 +15,11 @@ export default async function DashboardPage() {
   if (!session?.user) redirect(`/${locale}/auth/signin`);
 
   const t = await getTranslations("dashboard");
-  const now = new Date();
 
   const decks = await prisma.deck.findMany({
     where: { userId: session.user.id },
     orderBy: { createdAt: "desc" },
-    include: {
-      _count: { select: { cards: true } },
-      cards: {
-        where: { suspended: false },
-        include: {
-          cardReviews: {
-            where: { userId: session.user.id, due: { lte: now } },
-            select: { id: true },
-          },
-          _count: {
-            select: { cardReviews: { where: { userId: session.user.id } } },
-          },
-        },
-      },
-    },
+    include: { _count: { select: { cards: true } } },
   });
 
   const deckSummaries = decks.map((d) => ({
@@ -44,7 +29,6 @@ export default async function DashboardPage() {
     color: d.color,
     createdAt: d.createdAt.toISOString(),
     cardCount: d._count.cards,
-    dueCount: d.cards.filter((c) => c.cardReviews.length > 0 || c._count.cardReviews === 0).length,
   }));
 
   return (

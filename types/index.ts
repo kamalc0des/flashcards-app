@@ -7,7 +7,6 @@ export interface DeckSummary {
   color: string;
   createdAt: string;
   cardCount: number;
-  dueCount: number;
 }
 
 export interface DeckDetail extends DeckSummary {

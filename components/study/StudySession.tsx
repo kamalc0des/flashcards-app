@@ -16,6 +16,32 @@ interface StudySessionProps {
   deckColor: string;
 }
 
+interface SavedSession {
+  queue: StudyCardType[];
+  current: number;
+  learned: number;
+  totalCards: number;
+}
+
+function sessionKey(deckId: string) {
+  return `study-session-${deckId}`;
+}
+
+function saveSession(deckId: string, state: SavedSession) {
+  try { localStorage.setItem(sessionKey(deckId), JSON.stringify(state)); } catch {}
+}
+
+function loadSession(deckId: string): SavedSession | null {
+  try {
+    const raw = localStorage.getItem(sessionKey(deckId));
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
+function clearSession(deckId: string) {
+  try { localStorage.removeItem(sessionKey(deckId)); } catch {}
+}
+
 export function StudySession({ deckId, deckName, deckColor }: StudySessionProps) {
   const t = useTranslations("study");
   const router = useRouter();
@@ -26,7 +52,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const [learned, setLearned] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [allMode, setAllMode] = useState(false);
+  const [savedSession, setSavedSession] = useState<SavedSession | null>(null);
 
   const [editing, setEditing] = useState(false);
   const [editFront, setEditFront] = useState<JSONContent>(emptyTiptap());
@@ -34,10 +60,29 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
   const [editSaving, setEditSaving] = useState(false);
   const [cardVersion, setCardVersion] = useState(0);
 
-  const loadQueue = useCallback((all = false) => {
+  useEffect(() => {
+    const saved = loadSession(deckId);
+    if (saved && saved.queue.length > 0 && saved.current < saved.queue.length) {
+      setSavedSession(saved);
+      setLoading(false);
+    } else {
+      fetch(`/api/decks/${deckId}/study-queue`)
+        .then((r) => r.json())
+        .then((data: StudyCardType[]) => {
+          const shuffled = [...data].sort(() => Math.random() - 0.5);
+          setQueue(shuffled);
+          setTotalCards(shuffled.length);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    }
+  }, [deckId]);
+
+  const startFresh = useCallback(() => {
+    clearSession(deckId);
+    setSavedSession(null);
     setLoading(true);
-    setAllMode(all);
-    fetch(`/api/decks/${deckId}/study-queue${all ? "?all=true" : ""}`)
+    fetch(`/api/decks/${deckId}/study-queue`)
       .then((r) => r.json())
       .then((data: StudyCardType[]) => {
         const shuffled = [...data].sort(() => Math.random() - 0.5);
@@ -51,10 +96,16 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
       .catch(() => setLoading(false));
   }, [deckId]);
 
-  useEffect(() => { loadQueue(); }, [loadQueue]);
+  const resumeSession = useCallback(() => {
+    if (!savedSession) return;
+    setQueue(savedSession.queue);
+    setCurrent(savedSession.current);
+    setLearned(savedSession.learned);
+    setTotalCards(savedSession.totalCards);
+    setSavedSession(null);
+  }, [savedSession]);
 
   const handleBack = useCallback(() => {
-    router.refresh();
     router.push(`/decks/${deckId}`);
   }, [router, deckId]);
 
@@ -66,19 +117,22 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
       setFlipped(false);
 
       if (quality === 0) {
-        // Requeue at end, not counted as learned
         setQueue((q) => {
           const next = [...q];
           next.splice(current, 1);
           next.push(card);
+          saveSession(deckId, { queue: next, current, learned, totalCards });
           return next;
         });
       } else {
         const nextLearned = learned + 1;
+        const nextCurrent = current + 1;
         setLearned(nextLearned);
-        setCurrent((c) => c + 1);
-        if (current + 1 >= queue.length) {
-          router.refresh();
+        setCurrent(nextCurrent);
+        if (nextCurrent < queue.length) {
+          saveSession(deckId, { queue, current: nextCurrent, learned: nextLearned, totalCards });
+        } else {
+          clearSession(deckId);
         }
       }
 
@@ -88,7 +142,7 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
         body: JSON.stringify({ cardId: card.id, quality }),
       }).catch(() => {});
     },
-    [queue, current, deckId, learned, router]
+    [queue, current, deckId, learned, totalCards]
   );
 
   const openEdit = useCallback(() => {
@@ -126,26 +180,35 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
     );
   }
 
-  if (queue.length === 0) {
+  // Resume prompt
+  if (savedSession) {
+    const remaining = savedSession.queue.length - savedSession.current;
     return (
       <div className="h-dvh bg-zinc-950 text-white flex flex-col items-center justify-center px-6">
         <div className="w-full max-w-sm text-center">
-          <div className="text-4xl mb-4">✅</div>
-          <h2 className="text-xl font-bold mb-2">{t("empty")}</h2>
-          <p className="text-zinc-400 text-sm mb-8">{t("emptyDesc")}</p>
+          <div className="text-4xl mb-5">⏸️</div>
+          <h2 className="text-xl font-bold mb-2">{t("resumeSession")}</h2>
+          <p className="text-zinc-400 text-sm mb-1">
+            {t(savedSession.learned > 1 ? "masteredCountPlural" : "masteredCount", { count: savedSession.learned })}
+            {" · "}
+            {t("cardsRemaining", { count: remaining })}
+          </p>
+          <p className="text-zinc-500 text-sm mb-8">
+            <span className="font-semibold" style={{ color: deckColor }}>{deckName}</span>
+          </p>
           <div className="flex flex-col gap-3">
             <button
-              onClick={() => loadQueue(true)}
+              onClick={resumeSession}
               className="w-full py-3.5 rounded-2xl font-semibold text-sm text-zinc-950 active:scale-95 transition-all"
               style={{ backgroundColor: deckColor }}
             >
-              {t("studyAll")}
+              {t("resumeButton")}
             </button>
             <button
-              onClick={handleBack}
-              className="text-zinc-400 hover:text-white text-sm transition-colors"
+              onClick={startFresh}
+              className="w-full py-3.5 rounded-2xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 transition-colors"
             >
-              ← {t("backToDeck")}
+              {t("newSession")}
             </button>
           </div>
         </div>
@@ -167,9 +230,15 @@ export function StudySession({ deckId, deckName, deckColor }: StudySessionProps)
           </p>
           <div className="flex flex-col gap-3">
             <button
-              onClick={handleBack}
+              onClick={startFresh}
               className="w-full py-3.5 rounded-2xl font-semibold text-sm text-zinc-950 active:scale-95 transition-all"
               style={{ backgroundColor: deckColor }}
+            >
+              {t("newSession")}
+            </button>
+            <button
+              onClick={handleBack}
+              className="w-full py-3.5 rounded-2xl border border-zinc-700 text-zinc-300 font-semibold text-sm hover:bg-zinc-800 transition-colors"
             >
               {t("backToDeck")}
             </button>
